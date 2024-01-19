@@ -7,6 +7,7 @@ from quantum_insider import scrape_quantum_insider
 from hpc_wire import scrape_hpcwire
 from quanta_magazine import scrape_quanta_magazine
 from phys_org import scrape_phys_org
+from shtetl_optimized import scrape_shtetl_optimized
 
 def main():
     # Configure logging
@@ -31,7 +32,8 @@ def main():
         "quantum-insider": scrape_quantum_insider,
         "hpc-wire": scrape_hpcwire,
         "quanta-magazine": scrape_quanta_magazine,
-        "phys-org": scrape_phys_org
+        "phys-org": scrape_phys_org,
+        "shtetl-optimized": scrape_shtetl_optimized
         # Add more scrapers here as needed
     }
 
