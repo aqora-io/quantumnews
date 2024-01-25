@@ -20,7 +20,7 @@ We welcome contributions! If you're interested in helping develop Quantum News, 
 Quantum News is open source and is available under the MIT License.
 
 ## Contact
-For any questions or feedback, feel free to reach out to us at contact@quantumnews.io.
+For any questions or feedback, feel free to reach out to us at quantumnews@aqora.io.
 
 ## Acknowledgements
 Special thanks to the lobste.rs community for providing the base for this project.
