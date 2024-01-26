@@ -132,8 +132,8 @@
   <% end %>
   <% if Rails.application.config.google_analytics_id.present? %>
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=<%= Rails.application.config.google_analytics_id %>" type="text/plain" data-category="marketing"></script>
-    <script type="text/plain" data-category="marketing">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=<%= Rails.application.config.google_analytics_id %>" type="text/plain" data-category="statistics"></script>
+    <script type="text/plain" data-category="statistics">
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
