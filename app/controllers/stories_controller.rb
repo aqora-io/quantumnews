@@ -165,17 +165,15 @@ class StoriesController < ApplicationController
         @comment = @story.comments.build
 
         @meta_tags = {
-          "twitter:card" => "summary",
-          "twitter:site" => "@lobsters",
-          "twitter:title" => @story.title,
-          "twitter:description" => @story.comments_count.to_s + " " +
-            "comment".pluralize(@story.comments_count),
-          "twitter:image" => Rails.application.root_url +
-            "apple-touch-icon-144.png"
+          type: "article",
+          title: @story.title,
+          url: @story.comments_url,
+          description: @story.comments_count.to_s + " " +
+            "comment".pluralize(@story.comments_count)
         }
 
         if @story.user.twitter_username.present?
-          @meta_tags["twitter:creator"] = "@" + @story.user.twitter_username
+          @meta_tags[:twitter_creator] = "@" + @story.user.twitter_username
         end
 
         load_user_votes

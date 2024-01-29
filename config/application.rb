@@ -104,6 +104,14 @@ class << Rails.application
     "Quantum News"
   end
 
+  def description
+    "Dive into discussions on quantum breakthroughs, share insights on quantum algorithms, and stay informed about the latest advancements in the world of quantum computing."
+  end
+
+  def featured_image_url
+    "https://aqora-static.s3.fr-par.scw.cloud/featured-news.png"
+  end
+
   # to force everyone to be considered logged-out (without destroying
   # sessions) and refuse new logins
   def read_only?
