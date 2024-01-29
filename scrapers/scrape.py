@@ -7,21 +7,25 @@ from quantum_insider import scrape_quantum_insider
 from hpc_wire import scrape_hpcwire
 from quanta_magazine import scrape_quanta_magazine
 from phys_org import scrape_phys_org
+from le_lab_quantique import scrap_le_lab_quantique
+
 
 def main():
     # Configure logging
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
     if len(sys.argv) < 4:
-        logging.error("Usage: python3 scrape.py [scraper_names/all] [username] [password]")
+        logging.error(
+            "Usage: python3 scrape.py [scraper_names/all] [username] [password]"
+        )
         return
 
     scraper_names_input = sys.argv[1]
     username = sys.argv[2]
     password = sys.argv[3]
 
-    aqora_host = os.getenv('AQORA_HOST', 'https://app-staging.aqora-internal.io')
-    quantumnews_host = os.getenv('QUANTUMNEWS_HOST', 'https://news.aqora-internal.io')
+    aqora_host = os.getenv("AQORA_HOST", "https://app-staging.aqora-internal.io")
+    quantumnews_host = os.getenv("QUANTUMNEWS_HOST", "https://news.aqora-internal.io")
 
     poster = QuantumNewsPoster(aqora_host, quantumnews_host)
     poster.login_user(username, password)
@@ -31,11 +35,16 @@ def main():
         "quantum-insider": scrape_quantum_insider,
         "hpc-wire": scrape_hpcwire,
         "quanta-magazine": scrape_quanta_magazine,
-        "phys-org": scrape_phys_org
+        "phys-org": scrape_phys_org,
+        "le-lab-quantique": scrap_le_lab_quantique
         # Add more scrapers here as needed
     }
 
-    scraper_names = scraper_names_input.split(',') if scraper_names_input != 'all' else all_scrapers.keys()
+    scraper_names = (
+        scraper_names_input.split(",")
+        if scraper_names_input != "all"
+        else all_scrapers.keys()
+    )
 
     for scraper_name in scraper_names:
         scraper_function = all_scrapers.get(scraper_name)
@@ -48,6 +57,7 @@ def main():
                 logging.info(f"Posted story from {scraper_name}: {link}")
         else:
             logging.error(f"Unknown scraper: {scraper_name}")
+
 
 if __name__ == "__main__":
     main()
