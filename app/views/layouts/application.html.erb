@@ -78,7 +78,7 @@
           <%= link_to_different_page 'Saved', saved_path %>
           <%= link_to_different_page raw("#{@user.username}&nbsp;<span class='karma'>(#{@user.karma})</span>"), settings_path %>
         <% else %>
-          <%= link_to_different_page 'Login', login_path, class: 'corner' %>
+          <%= link_to_different_page 'Login / Signup', login_path, class: 'corner' %>
         <% end %>
       </nav>
     </div>
@@ -91,7 +91,7 @@
           <%= link_to raw("&#9993;"), inbox_path, class: 'inbox' %>
         <% end %>
       <% else %>
-        <%= link_to 'Login', login_path, class: 'corner' %>
+        <%= link_to 'Login / Signup', login_path, class: 'corner' %>
       <% end %>
     </nav>
   </header>
