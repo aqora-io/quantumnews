@@ -47,7 +47,10 @@ Rails.application.routes.draw do
   get "/replies/unread" => "replies#unread"
   get "/replies/unread/page/:page" => "replies#unread"
 
-  get "/login" => "login#index"
+  get "/login" => "login#aqora_auth"
+  get "/login/aqora_auth" => "login#aqora_auth"
+  get "/login/aqora_callback" => "login#aqora_callback"
+
   get "/signup" => "login#index"
   # post "/login" => "login#login"
   post "/logout" => "login#logout"
@@ -65,9 +68,6 @@ Rails.application.routes.draw do
   #   :as => "reset_password"
   # match "/login/set_new_password" => "login#set_new_password",
   #   :as => "set_new_password", :via => [:get, :post]
-
-  get "/login/aqora_auth" => "login#aqora_auth"
-  get "/login/aqora_callback" => "login#aqora_callback"
 
   get "/t/:tag" => "home#single_tag", :as => "tag", :constraints => {tag: /[^,\.]+/}
   get "/t/:tag" => "home#multi_tag", :as => "multi_tag"
