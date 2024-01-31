@@ -70,10 +70,6 @@ module Lobsters
 
     # rails stop putting js on everything
     config.action_view.form_with_generates_remote_forms = false
-
-    # default analytics disabled
-    config.cookie_consent_config_js = nil
-    config.google_analytics_id = nil
   end
 end
 
