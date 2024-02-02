@@ -22,7 +22,7 @@ def scrape_quantum_insider():
 
     date_elements = soup.find_all('span', class_='elementor-post-date')
     for date_element in date_elements:
-        date_text = date_element.get_text().strip()
+        date_text = datetime.strptime(date_element.get_text().strip(), "%B %d, %Y").strftime("%B %d, %Y")
         if date_text == today:
             article = date_element.find_parent('article')
             if article:
