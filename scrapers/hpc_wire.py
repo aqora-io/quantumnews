@@ -30,8 +30,8 @@ def scrape_hpcwire():
     # Find all article entries
     entries = soup.find_all('div', class_='row entry')
     for entry in entries:
-        date_element = entry.find('p', class_='date text-right')
-        if date_element and date_element.get_text().strip() == today:
+        date_text = datetime.strptime(entry.find('p', class_='date text-right').get_text().strip(), "%B %d, %Y").strftime("%B %d, %Y")
+        if date_text and date_text == today:
             link_element = entry.find('a')
             if link_element and link_element.get('href'):
                 links.append(link_element.get('href'))
