@@ -38,12 +38,12 @@ def scrape_scirate():
 
                 link = title_element.find('a').get('href') if title_element else None
                 authors = authors_element.get_text().strip() if authors_element else ''
-                date = date_element.get_text().strip() if date_element else ''
+                date = " ".join(date_element.get_text().strip().split()[:3]) if date_element else ''
                 abstract = abstract_element.get_text().strip() if abstract_element else ''
 
                 description = f"{authors} ({date}). \n\n**Abstract:** {abstract} \n\nArxiv: https://arxiv.org/abs/{link.split('/')[-1]}"
 
-                if link and len(link) > 0:
+                if link and len(link) > 0 and not date.startswith("Jan") and int(date.split()[1]) >= 7:
                     paper_info = {
                         'link': f"https://scirate.com{link}",
                         'description': description,
@@ -51,4 +51,5 @@ def scrape_scirate():
                     }
                     filtered_papers.append(paper_info)
 
+    print(len(filtered_papers))
     return filtered_papers
