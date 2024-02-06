@@ -46,9 +46,12 @@ def scrape_hpcwire():
                 for li in ul.find_all('li'):
                     link_element = li.find('a')
                     if link_element and link_element.get('href'):
-                        links.append(link_element.get('href'))
+                        links.append(
+                            {
+                                'link': link_element.get('href'),
+                                'description': "",
+                                'tags': ['announce']
+                            }
+                        )
 
-    # Return the list of unique links
-    unique_links = list(set(links))
-
-    return unique_links
+    return links

@@ -1,6 +1,7 @@
 import requests
 import json
 from bs4 import BeautifulSoup
+import logging
 
 class QuantumNewsPoster:
     def __init__(self, aqora_host, news_host):
@@ -49,10 +50,14 @@ class QuantumNewsPoster:
         story_titles = [a.get_text().strip() for a in soup.select('.story .details .link a')]
         return story_titles
 
-    def post_story(self, url):
+    def post_story(self, story_info):
         # Get CSRF token
         response = self.session.get(f"{self.news_host}/stories/new")
         csrf_token = response.text.split('csrf-token" content="')[1].split('"')[0]
+
+        url = story_info['link']
+        description = story_info['description']
+        tags = story_info['tags']
 
         # Fetch URL title
         response = self.session.post(
@@ -64,12 +69,12 @@ class QuantumNewsPoster:
         try:
             url_title = json.loads(response.text)['title']
         except json.JSONDecodeError:
-            print("Failed to decode JSON. Response was:", response.text)
+            logging.error("Failed to decode JSON. Response was:", response.text)
             return
 
         # Check if the story title is already in the list
         if url_title in self.existing_titles:
-            print(f"Story '{url_title}' already exists. Not posting.")
+            logging.info(f"Story '{url_title}' already exists. Not posting.")
             return
 
         # Post story
@@ -77,13 +82,13 @@ class QuantumNewsPoster:
             "authenticity_token": csrf_token,
             "story[url]": url,
             "story[title]": url_title,
-            "story[description]": "",
-            "story[tags_a][]": "",
-            "story[tags_a][]": "announce",
+            "story[description]": description,
+            "story[tags_a][]": tags,
             "story[user_is_author]": "0",
             "story[user_is_following]": "0",
             "commit": "Submit"
         }
         self.session.post(f"{self.news_host}/stories", data=story_data, headers={"X-CSRF-Token": csrf_token})
+        logging.info(f"Posted story: {url}")
 
 
