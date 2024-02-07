@@ -31,8 +31,12 @@ def scrape_phys_org():
             title_element = article.find('h3')
             link_element = title_element.find('a') if title_element else None
             if link_element:
-                links.append(link_element.get('href'))
+                links.append(
+                    {
+                        'link': link_element.get('href'),
+                        'description': "",
+                        'tags': ['announce']
+                    }
+                )
 
-    # Return the list of unique links
-    unique_links = list(set(links))
-    return unique_links
+    return links

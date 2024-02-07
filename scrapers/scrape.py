@@ -8,7 +8,7 @@ from hpc_wire import scrape_hpcwire
 from quanta_magazine import scrape_quanta_magazine
 from phys_org import scrape_phys_org
 from le_lab_quantique import scrap_le_lab_quantique
-
+from scirate import scrape_scirate
 
 def main():
     # Configure logging
@@ -36,6 +36,7 @@ def main():
         "hpc-wire": scrape_hpcwire,
         "quanta-magazine": scrape_quanta_magazine,
         "phys-org": scrape_phys_org,
+        "scirate": scrape_scirate,
         "le-lab-quantique": scrap_le_lab_quantique
         # Add more scrapers here as needed
     }
@@ -49,12 +50,11 @@ def main():
     for scraper_name in scraper_names:
         scraper_function = all_scrapers.get(scraper_name)
         if scraper_function:
-            links = scraper_function()
-            if len(links) == 0:
+            stories = scraper_function()
+            if len(stories) == 0:
                 logging.info(f"No new stories found from {scraper_name}")
-            for link in links:
-                poster.post_story(link)
-                logging.info(f"Posted story from {scraper_name}: {link}")
+            for story in stories:
+                poster.post_story(story)
         else:
             logging.error(f"Unknown scraper: {scraper_name}")
 

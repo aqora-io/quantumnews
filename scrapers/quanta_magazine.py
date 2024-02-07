@@ -41,6 +41,12 @@ def scrape_quanta_magazine():
     for item in data['data']['response']['data']:
         if 'date' in item and item['date'].startswith(today):
             if 'link' in item:
-                links.append(item['link'])
+                links.append(
+                    {
+                        'link': link['item'],
+                        'description': "",
+                        'tags': ['announce']
+                    }
+                )
 
     return links

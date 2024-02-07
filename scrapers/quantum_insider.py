@@ -28,9 +28,12 @@ def scrape_quantum_insider():
             if article:
                 link = article.find('a')
                 if link:
-                    links.append(link.get('href'))
+                    links.append(
+                        {
+                            'link': link.get('href'),
+                            'description': "",
+                            'tags': ['announce']
+                        }
+                    )
 
-    # Remove duplicates by converting to a set and back to a list
-    unique_links = list(set(links))
-
-    return unique_links
+    return links

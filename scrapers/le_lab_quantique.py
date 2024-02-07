@@ -31,7 +31,11 @@ def scrap_le_lab_quantique():
     data = response.json()
     today = datetime.now().strftime("%Y-%m-%d")
     links = [
-        item["link"]
+        {
+            'link': item["link"],
+            'description': "",
+            'tags': ['announce']
+        }
         for item in data["data"]["posts"]["nodes"]
         if "date" in item and item["date"].startswith(today) and "link" in item
     ]
