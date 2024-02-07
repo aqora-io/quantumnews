@@ -51,5 +51,4 @@ def scrape_scirate():
                     }
                     filtered_papers.append(paper_info)
 
-    print(len(filtered_papers))
     return filtered_papers
