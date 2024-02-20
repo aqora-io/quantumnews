@@ -6,3 +6,5 @@ Disallow: /comments/page/
 
 User-agent: GPTBot
 Disallow: /
+
+Sitemap: https://news.aqora.io/sitemap.xml.gz
