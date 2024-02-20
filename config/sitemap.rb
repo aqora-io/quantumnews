@@ -7,7 +7,7 @@ check_daily = 2.weeks.ago
 top_score = Story.all.maximum("score")
 
 SitemapGenerator::Sitemap.create do
-  %w[/about /chat].each do |path|
+  %w[/about].each do |path|
     add path, changefreq: "monthly", lastmod: nil
   end
 
@@ -25,7 +25,9 @@ SitemapGenerator::Sitemap.create do
     changefreq = "daily" if lastmod >= check_daily
     changefreq = "hourly" if lastmod >= check_hourly
 
-    priority = 1.0 * story.score / top_score
+    # Calculate priority and ensure it is not negative
+    priority = [1.0 * story.score / top_score, 0].max
+
     add story.comments_path, lastmod: lastmod, changefreq: changefreq, priority: priority
   end
 end
