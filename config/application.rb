@@ -104,11 +104,15 @@ class << Rails.application
   end
 
   def description
-    "Dive into discussions on quantum breakthroughs, share insights on quantum algorithms, and stay informed about the latest advancements in the world of quantum computing."
+    "Explore Quantum News for the latest in Quantum Computing. Dive into discussions, research, and insights with a global community of experts and enthusiasts."
   end
 
   def featured_image_url
-    "https://aqora-static.s3.fr-par.scw.cloud/featured-news.png"
+    root_url + "/featured.png"
+  end
+
+  def featured_image_url
+    root_url + "/featured_square.png"
   end
 
   # to force everyone to be considered logged-out (without destroying

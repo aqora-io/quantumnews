@@ -19,7 +19,8 @@
   <meta property="og:type" content="<%= @meta_tags.to_h.fetch(:type, 'website') %>" />
   <meta property="og:url" content="<%= @meta_tags.to_h.fetch(:url, Rails.application.root_url) %>" />
   <meta property="og:image" content="<%= Rails.application.featured_image_url %>" />
-  <meta property="og:description" content="<%= @meta_tags.to_h.fetch(:description, Rails.application.description) %>" />
+  <meta property="og:image" content="<%= Rails.application.featured_image_square_url %>" />
+  <meta name="description" property="og:description" content="<%= @meta_tags.to_h.fetch(:description, Rails.application.description) %>" />
   <meta name="twitter:card" content="summary_large_image" />
   <% if @meta_tags.to_h.key?(:twitter_creator) %>
     <meta name="twitter:creator" content="<%= @meta_tags.to_h.fetch(:twitter_creator) %>" />
@@ -44,9 +45,38 @@
       title="<%= @comments_rss_link[:title] %>"
       href="<%= @comments_rss_link[:href] %>" />
   <% end %>
-  <% if Rails.application.config.cookie_consent_config_js.present? %>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@v3.0.0/dist/cookieconsent.css">
+
+  <!-- Structured Website Data -->
+  <% if @story %>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "NewsArticle",
+      "headline": "<%= @story.title %>",
+      "datePublished": "<%= @story.created_at.iso8601 %>",
+      "dateModified": "<%= @story.updated_at.iso8601 %>",
+    }
+  </script>
+  <% else %>
+  <script type="application/ld+json">
+    {
+      "@context" : "https://schema.org",
+      "@type" : "WebSite",
+      "name" : "Quantum News",
+      "alternateName" : "QN",
+      "url" : "https://news.aqora.io/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://news.aqora.io/search?what=stories&order=newest&q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+  </script>
   <% end %>
+
 </head>
 <body data-username='<%= @user.try(:username) %>'>
   <header id="nav">
