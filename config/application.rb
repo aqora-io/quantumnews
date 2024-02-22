@@ -111,7 +111,7 @@ class << Rails.application
     root_url + "/featured.png"
   end
 
-  def featured_image_url
+  def featured_image_square_url
     root_url + "/featured_square.png"
   end
 
