@@ -81,7 +81,7 @@ class Story < ApplicationRecord
           .where(tag_filters: {user_id: user})
           .select(:story_id).arel
       )
-    ) 
+    )
   }
   scope :hidden_by, ->(user) {
     user.nil? ? none : joins(:hidings).merge(HiddenStory.by(user))
@@ -293,7 +293,6 @@ class Story < ApplicationRecord
       :short_id,
       :short_id_url,
       :created_at,
-      :updated_at,
       :title,
       :url,
       :score,
