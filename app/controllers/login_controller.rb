@@ -32,7 +32,16 @@ class LoginController < ApplicationController
 
   def aqora_auth
     session[:aqora_state] = SecureRandom.hex
-    redirect_to Aqora.oauth_auth_url(session[:aqora_state]), allow_other_host: true
+    redirect_uri = url_for(
+      controller: 'login',
+      action: 'aqora_callback',
+      host: request.host,
+      protocol: request.protocol
+    )
+    redirect_to(
+      Aqora.oauth_auth_url(session[:aqora_state], redirect_uri),
+      allow_other_host: true
+    )
   end
 
   def aqora_callback
