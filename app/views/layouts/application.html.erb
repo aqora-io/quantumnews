@@ -47,7 +47,7 @@
   <% end %>
 
   <!-- Structured Website Data -->
-  <% if @story %>
+  <% if @story and @story.created_at %>
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
