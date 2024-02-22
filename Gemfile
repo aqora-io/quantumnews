@@ -31,6 +31,9 @@ gem "htmlentities"
 gem "pdf-reader"
 gem "nokogiri"
 gem "parslet"
+gem "kramdown"
+gem "kramdown-parser-gfm"
+gem "kramdown-math-katex"
 
 # perf
 gem "flamegraph"

@@ -1,6 +1,9 @@
 # typed: false
 
 require "commonmarker"
+require 'kramdown'
+require 'kramdown-math-katex'
+require "kramdown-parser-gfm"
 
 class Markdowner
   # opts[:allow_images] allows <img> tags
@@ -10,35 +13,37 @@ class Markdowner
       return ""
     end
 
-    exts = [:tagfilter, :autolink, :strikethrough]
-    root = CommonMarker.render_doc(text.to_s, [:SMART], exts)
+    text = Kramdown::Document.new(text, math_engine: :katex, input: 'GFM').to_html
 
-    walk_text_nodes(root) { |n| postprocess_text_node(n) }
+    # exts = [:tagfilter, :autolink, :strikethrough]
+    # root = CommonMarker.render_doc(text.to_s, [:SMART], exts)
 
-    ng = Nokogiri::HTML(root.to_html([:DEFAULT], exts))
+    # walk_text_nodes(root) { |n| postprocess_text_node(n) }
 
-    # change <h1>, <h2>, etc. headings to just bold tags
-    ng.css("h1, h2, h3, h4, h5, h6").each do |h|
-      h.name = "strong"
-    end
+    # ng = Nokogiri::HTML(root.to_html([:DEFAULT], exts))
 
-    # This should happen before adding rel=ugc to all links
-    convert_images_to_links(ng) unless opts[:allow_images]
+    # # change <h1>, <h2>, etc. headings to just bold tags
+    # ng.css("h1, h2, h3, h4, h5, h6").each do |h|
+    #   h.name = "strong"
+    # end
 
-    # make links have rel=ugc
-    ng.css("a").each do |h|
-      h[:rel] = "ugc" unless begin
-        URI.parse(h[:href]).host.nil?
-      rescue
-        false
-      end
-    end
+    # # This should happen before adding rel=ugc to all links
+    # convert_images_to_links(ng) unless opts[:allow_images]
 
-    if ng.at_css("body")
-      ng.at_css("body").inner_html
-    else
-      ""
-    end
+    # # make links have rel=ugc
+    # ng.css("a").each do |h|
+    #   h[:rel] = "ugc" unless begin
+    #     URI.parse(h[:href]).host.nil?
+    #   rescue
+    #     false
+    #   end
+    # end
+
+    # if ng.at_css("body")
+    #   ng.at_css("body").inner_html
+    # else
+    #   ""
+    # end
   end
 
   def self.walk_text_nodes(node, &block)

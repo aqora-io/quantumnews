@@ -151,6 +151,15 @@ GEM
       rdoc
       reline (>= 0.4.2)
     json (2.7.1)
+    katex (0.10.0)
+      execjs (~> 2.8)
+    kramdown (2.4.0)
+      rexml
+    kramdown-math-katex (1.0.1)
+      katex (~> 0.4)
+      kramdown (~> 2.0)
+    kramdown-parser-gfm (1.1.0)
+      kramdown (~> 2.0)
     language_server-protocol (3.17.0.3)
     lint_roller (1.1.0)
     listen (3.8.0)
@@ -415,6 +424,9 @@ DEPENDENCIES
   graphql-client
   htmlentities
   json
+  kramdown
+  kramdown-math-katex
+  kramdown-parser-gfm
   listen
   mail
   memory_profiler
