@@ -108,6 +108,10 @@ class << Rails.application
     root_url + "/featured.png"
   end
 
+  def featured_image_url
+    root_url + "/featured_square.png"
+  end
+
   # to force everyone to be considered logged-out (without destroying
   # sessions) and refuse new logins
   def read_only?
