@@ -47,14 +47,13 @@
   <% end %>
 
   <!-- Structured Website Data -->
-  <% if @story %>
+  <% if @story and @story.created_at %>
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "NewsArticle",
       "headline": "<%= @story.title %>",
       "datePublished": "<%= @story.created_at.iso8601 %>",
-      "dateModified": "<%= @story.updated_at.iso8601 %>",
     }
   </script>
   <% else %>
