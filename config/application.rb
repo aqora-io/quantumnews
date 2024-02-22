@@ -105,7 +105,7 @@ class << Rails.application
   end
 
   def featured_image_url
-    "https://aqora-static.s3.fr-par.scw.cloud/featured-news.png"
+    root_url + "/featured.png"
   end
 
   # to force everyone to be considered logged-out (without destroying
