@@ -101,7 +101,7 @@ class << Rails.application
   end
 
   def description
-    "Dive into discussions on quantum breakthroughs, share insights on quantum algorithms, and stay informed about the latest advancements in the world of quantum computing."
+    "Explore Quantum News for the latest in Quantum Computing. Dive into discussions, research, and insights with a global community of experts and enthusiasts."
   end
 
   def featured_image_url
