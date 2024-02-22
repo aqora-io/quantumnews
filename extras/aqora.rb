@@ -4,7 +4,6 @@
 require 'graphql/client'
 require 'graphql/client/http'
 
-CLIENT_ID = 'quantumnews'
 
 class AqoraApi
   SCHEMA = GraphQL::Client.load_schema(Rails.root.join('config', 'aqora.graphql.json').to_s)
@@ -51,7 +50,7 @@ class AqoraApi
     }
   GRAPHQL
 
-  def initialize(url)
+  def initialize(url, client_id)
     @http = GraphQL::Client::HTTP.new(url) do
       def headers(context)
         puts "context: #{context.inspect}"
@@ -60,18 +59,19 @@ class AqoraApi
         headers
       end
     end
+    @client_id = client_id
     @client = GraphQL::Client.new(schema: SCHEMA, execute: @http)
   end
 
   def oauth2_token(code, redirect_uri)
     @client.query(OAuth2TokenMutation, variables: {
-                    client_id: CLIENT_ID, code:, redirect_uri:
+                    client_id: @client_id, code:, redirect_uri:
                   }, context: {})
   end
 
   def oauth2_refresh(refresh_token)
     @client.query(OAuth2RefreshMutation, variables: {
-                    client_id: CLIENT_ID, refresh_token:
+                    client_id: @client_id, refresh_token:
                   }, context: {})
   end
 
@@ -108,11 +108,17 @@ class Aqora
   cattr_accessor :secret
 
   @url = 'https://app.aqora.io'
+  @client_id = 'quantumnews'
   @secret = nil
   @api = nil
 
   def self.web_hook_id
     'aqora'
+  end
+
+  def self.client_id=(client_id)
+    @client_id = client_id
+    @api = nil
   end
 
   def self.url=(url)
@@ -125,7 +131,7 @@ class Aqora
   end
 
   def self.api
-    @api = AqoraApi.new(relative_url('/graphql')) if @api.nil?
+    @api = AqoraApi.new(relative_url('/graphql'), @client_id) if @api.nil?
     @api
   end
 
@@ -149,8 +155,8 @@ class Aqora
     process_token_response(oauth2_refresh.data.oauth2_refresh)
   end
 
-  def self.oauth_auth_url(state)
-    relative_url("/oauth2/authorize?client_id=#{CLIENT_ID}&state=#{state}")
+  def self.oauth_auth_url(state, redirect_uri)
+    relative_url("/oauth2/authorize?client_id=#{@client_id}&state=#{state}&redirect_uri=#{redirect_uri}")
   end
 
   private
