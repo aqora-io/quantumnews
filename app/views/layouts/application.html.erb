@@ -90,13 +90,13 @@
 
     <div style="margin-left: 8px; margin-right: 8px;" class="navholder">
       <nav class="links">
-        <%= link_to_different_page 'Active', active_path %>
-        <%= link_to_different_page 'Recent', recent_path %>
-        <%= link_to_different_page 'Comments', comments_path %>
-
         <% if @user && @user.can_submit_stories? %>
           <%= link_to_different_page 'Submit', new_story_path %>
         <% end %>
+
+        <%= link_to_different_page 'Active', active_path %>
+        <%= link_to_different_page 'Recent', recent_path %>
+        <%= link_to_different_page 'Comments', comments_path %>
 
         <%= link_to_different_page 'Search', search_path %>
 
