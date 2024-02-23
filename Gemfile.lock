@@ -150,14 +150,21 @@ GEM
     irb (1.11.1)
       rdoc
       reline (>= 0.4.2)
+    itextomml (1.6.1)
     json (2.7.1)
     katex (0.10.0)
       execjs (~> 2.8)
     kramdown (2.4.0)
       rexml
+    kramdown-math-itex2mml (1.0.0)
+      itextomml (~> 1.5)
+      kramdown (~> 2.0)
     kramdown-math-katex (1.0.1)
       katex (~> 0.4)
       kramdown (~> 2.0)
+    kramdown-math-sskatex (1.0.0)
+      kramdown (~> 2.0)
+      sskatex (>= 0.9.37)
     kramdown-parser-gfm (1.1.0)
       kramdown (~> 2.0)
     language_server-protocol (3.17.0.3)
@@ -355,6 +362,8 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
+    sskatex (0.9.39)
+      execjs (~> 2.7)
     stackprof (0.2.25)
     standard (1.33.0)
       language_server-protocol (~> 3.17.0.2)
@@ -425,7 +434,9 @@ DEPENDENCIES
   htmlentities
   json
   kramdown
+  kramdown-math-itex2mml
   kramdown-math-katex
+  kramdown-math-sskatex
   kramdown-parser-gfm
   listen
   mail

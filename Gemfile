@@ -34,6 +34,8 @@ gem "parslet"
 gem "kramdown"
 gem "kramdown-parser-gfm"
 gem "kramdown-math-katex"
+gem "kramdown-math-itex2mml"
+gem "kramdown-math-sskatex"
 
 # perf
 gem "flamegraph"
