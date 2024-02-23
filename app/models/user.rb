@@ -59,12 +59,12 @@ class User < ApplicationRecord
   typed_store :settings do |s|
     s.string :prefers_color_scheme, default: "system"
     s.boolean :email_notifications, default: false
-    s.boolean :email_replies, default: false
+    s.boolean :email_replies, default: true
     s.boolean :pushover_replies, default: false
     s.string :pushover_user_key
-    s.boolean :email_messages, default: false
+    s.boolean :email_messages, default: true
     s.boolean :pushover_messages, default: false
-    s.boolean :email_mentions, default: false
+    s.boolean :email_mentions, default: true
     s.boolean :show_avatars, default: true
     s.boolean :show_email, default: false
     s.boolean :show_story_previews, default: false
