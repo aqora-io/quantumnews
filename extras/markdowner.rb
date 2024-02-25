@@ -7,8 +7,9 @@ require 'nokogiri'
 
 # Class responsible for converting Markdown to HTML.
 class Markdowner
+  # opts[:allow_images] allows <img> tags
+
   DEFAULT_MATHS_OPTIONS = {
-    katex_js_path: 'extras/katex/katex.min.js',
     output: 'mathml',
     display_mode: true,
     fleqn: true,
@@ -23,12 +24,12 @@ class Markdowner
     ]
   }
 
-  def self.to_html(text, options = {})
+  def self.to_html(text, opts = {})
     return '' if text.blank?
 
-    # Convert Markdown to HTML using Kramdown
+
     html = Kramdown::Document.new(
-      text, math_engine: :katex,
+      text.to_s, math_engine: :katex,
       math_engine_opts: DEFAULT_MATHS_OPTIONS,
       input: 'GFM',
       syntax_highlighter: :coderay,
@@ -38,22 +39,20 @@ class Markdowner
       },
     ).to_html
 
-    # Example: Replace @username with a link to the user's profile
     html = replace_user_mentions(html)
 
     # Parse HTML using Nokogiri
-    ng = Nokogiri::HTML.fragment(html)
+    ng = Nokogiri::HTML5.fragment(html)
 
     # Change <h1>, <h2>, etc. headings to just bold tags
     change_headings_to_bold(ng)
 
     # This should happen before adding rel=ugc to all links
-    convert_images_to_links(ng) unless options[:allow_images]
+    convert_images_to_links(ng) unless opts[:allow_images]
 
     # Make links have rel=ugc
     make_links_ugc(ng)
 
-    # Return the HTML content
     ng.to_html
   end
 
