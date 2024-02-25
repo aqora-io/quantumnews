@@ -77,9 +77,7 @@ class Markdowner
   def self.convert_images_to_links(node)
     node.css('img').each do |img|
       link = Nokogiri::XML::Node.new('a', node)
-      link['href'] = img['src']
-      title = img['title']
-      alt = img['alt']
+      link['href'], title, alt = img.attributes.values_at('src', 'title', 'alt').map(&:to_s)
       link.content = [title, alt, link['href']].find(&:present?)
       img.replace(link)
     end
