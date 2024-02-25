@@ -26,7 +26,6 @@ gem "rotp"
 gem "rqrcode"
 
 # parsing
-gem "commonmarker", "<1"
 gem "htmlentities"
 gem "pdf-reader"
 gem "nokogiri"
@@ -34,8 +33,7 @@ gem "parslet"
 gem "kramdown"
 gem "kramdown-parser-gfm"
 gem "kramdown-math-katex"
-gem "kramdown-math-itex2mml"
-gem "kramdown-math-sskatex"
+gem "kramdown-syntax-coderay", "~> 1.0"
 
 # perf
 gem "flamegraph"
