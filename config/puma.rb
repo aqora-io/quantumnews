@@ -42,8 +42,9 @@ workers ENV.fetch("PUMA_WORKERS") { 4 }
 worker_boot_duration = 7 # seconds, conservatively
 # workers are numbered from zero, so:
 # (0..11).map {|i| (i / 3.0).floor } => [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3]
-def sleep_for_index index, worker_boot_duration
-  workers_to_start_at_a_time = Etc.nprocessors - 1 # leave one open for serving
+def sleep_for_index(index, worker_boot_duration)
+  # Ensure there's at least 1 processor for starting workers to avoid division by zero
+  workers_to_start_at_a_time = [Etc.nprocessors - 1, 1].max # Updated line
   (index / workers_to_start_at_a_time.to_f).floor * worker_boot_duration
 end
 last_index = (ENV.fetch("PUMA_WORKERS") { 4 }).to_i - 1
