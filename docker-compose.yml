@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  db:
+    image: mariadb:10.5
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    #ports:
+      #- "3306:3306"
+
+  web:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/quantumnews
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: "mysql2://user:password@db:3306/db?encoding=utf8mb4"
+      RAILS_ENV: development
+    depends_on:
+      - db
+    command: >
+      bash -c "bundle install &&
+              bin/rails db:drop _ignore_failures=true &&
+              bin/rails db:create &&
+              bin/setup &&
+              echo \"Aqora.client_id = 'localhost-news'\" > config/initializers/development.rb &&
+              bin/rails server -b '0.0.0.0'"
+volumes:
+  db-data:
