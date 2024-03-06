@@ -32,7 +32,7 @@ def main():
 
     # List of all scrapers and their corresponding functions
     all_scrapers = {
-        "quantum-insider": scrape_quantum_insider,
+        #"quantum-insider": scrape_quantum_insider,
         "hpc-wire": scrape_hpcwire,
         "quanta-magazine": scrape_quanta_magazine,
         "phys-org": scrape_phys_org,
