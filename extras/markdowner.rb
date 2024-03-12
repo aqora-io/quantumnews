@@ -1,99 +1,96 @@
-# typed: false
+# typed : false
 
-require "commonmarker"
+require 'kramdown'
+require 'kramdown-math-katex'
+require 'kramdown-syntax-coderay'
+require 'nokogiri'
 
+# Class responsible for converting Markdown to HTML.
 class Markdowner
   # opts[:allow_images] allows <img> tags
 
+  DEFAULT_MATHS_OPTIONS = {
+    output: 'mathml',
+    display_mode: true,
+    fleqn: true,
+    leqno: true,
+    delimiters: [
+      { left: '$$', right: '$$', display: true },
+      { left: '$', right: '$', display: false },
+      { left: '\(', right: '\)', display: false },
+      { left: '\[', right: '\]', display: true },
+      { left: '\\begin{equation}', right: '\\end{equation}', display: true },
+      { left: '\\begin{align}', right: '\\end{align}', display: true }
+    ]
+  }
+
   def self.to_html(text, opts = {})
-    if text.blank?
-      return ""
-    end
+    return '' if text.blank?
 
-    exts = [:tagfilter, :autolink, :strikethrough]
-    root = CommonMarker.render_doc(text.to_s, [:SMART], exts)
 
-    walk_text_nodes(root) { |n| postprocess_text_node(n) }
+    html = Kramdown::Document.new(
+      text.to_s, math_engine: :katex,
+      math_engine_opts: DEFAULT_MATHS_OPTIONS,
+      input: 'GFM',
+      syntax_highlighter: :coderay,
+      syntax_highlighter_opts: {
+        line_numbers: 'table',
+        bold_every: 5
+      },
+    ).to_html
 
-    ng = Nokogiri::HTML(root.to_html([:DEFAULT], exts))
+    html = replace_user_mentions(html)
 
-    # change <h1>, <h2>, etc. headings to just bold tags
-    ng.css("h1, h2, h3, h4, h5, h6").each do |h|
-      h.name = "strong"
-    end
+    # Parse HTML using Nokogiri
+    ng = Nokogiri::HTML5.fragment(html)
+
+    # Change <h1>, <h2>, etc. headings to just bold tags
+    change_headings_to_bold(ng)
 
     # This should happen before adding rel=ugc to all links
     convert_images_to_links(ng) unless opts[:allow_images]
 
-    # make links have rel=ugc
-    ng.css("a").each do |h|
-      h[:rel] = "ugc" unless begin
-        URI.parse(h[:href]).host.nil?
-      rescue
-        false
-      end
-    end
+    # Make links have rel=ugc
+    make_links_ugc(ng)
 
-    if ng.at_css("body")
-      ng.at_css("body").inner_html
-    else
-      ""
+    ng.to_html
+  end
+
+  def self.change_headings_to_bold(fragment)
+    fragment.css('h1, h2, h3, h4, h5, h6').each do |h|
+      h.name = 'strong'
     end
   end
 
-  def self.walk_text_nodes(node, &block)
-    return if node.type == :link
-    return block.call(node) if node.type == :text
-
-    node.each do |child|
-      walk_text_nodes(child, &block)
-    end
-  end
-
-  def self.postprocess_text_node(node)
-    while node
-      return unless node.string_content =~ /\B(@#{User::VALID_USERNAME})/o
-      before, user, after = $`, $1, $'
-
-      node.string_content = before
-
-      if User.exists?(username: user[1..])
-        link = CommonMarker::Node.new(:link)
-        link.url = Rails.application.root_url + "~#{user[1..]}"
-        node.insert_after(link)
-
-        link_text = CommonMarker::Node.new(:text)
-        link_text.string_content = user
-        link.append_child(link_text)
-
-        node = link
+  def self.replace_user_mentions(html)
+    html.gsub(%r{(?<!/)@(\w+)}) do |match|
+      username = ::Regexp.last_match(1)
+      if User.exists?(username: username)
+        "<a href='#{Rails.application.root_url}~#{username}'>@#{username}</a>"
       else
-        node.string_content += user
-      end
-
-      if after.length > 0
-        remainder = CommonMarker::Node.new(:text)
-        remainder.string_content = after
-        node.insert_after(remainder)
-
-        node = remainder
-      else
-        node = nil
+        match
       end
     end
   end
 
   def self.convert_images_to_links(node)
-    node.css("img").each do |img|
-      link = node.create_element("a")
+    node.css('img').each do |img|
+      link = Nokogiri::XML::Node.new('a', node)
+      link['href'], title, alt = img.attributes.values_at('src', 'title', 'alt').map(&:to_s)
+      link.content = [title, alt, link['href']].find(&:present?)
+      img.replace(link)
+    end
+  end
 
-      link["href"], title, alt = img.attributes
-        .values_at("src", "title", "alt")
-        .map(&:to_s)
+  def self.valid_url?(url)
+    URI.parse(url).host.nil?
+  rescue StandardError
+    false
+  end
 
-      link.content = [title, alt, link["href"]].find(&:present?)
-
-      img.replace link
+  def self.make_links_ugc(fragment)
+    fragment.css('a').each do |link|
+      link[:rel] = 'ugc' unless valid_url?(link[:href])
     end
   end
 end

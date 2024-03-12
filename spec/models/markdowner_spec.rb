@@ -127,4 +127,57 @@ describe Markdowner do
       expect(subject).to include "<img"
     end
   end
+
+  context "with LaTeX input" do
+    subject { described_class.to_html("$$ 5 + 5 $$") }
+    let(:expected_html) do
+      '<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mn>5</mn><mo>+</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">5 + 5</annotation></semantics></math></span>'
+    end
+
+    it "renders LaTeX to HTML" do
+      expect(subject).to include(expected_html)
+    end
+  end
+
+  context "with complex mathematical expressions" do
+    subject { described_class.to_html('$$ \int_{0}^{1} x^2 dx = \frac{1}{3} $$') }
+    let(:expected_html) do
+      '<span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msubsup><mo>∫</mo><mn>0</mn><mn>1</mn></msubsup><msup><mi>x</mi><mn>2</mn></msup><mi>d</mi><mi>x</mi><mo>=</mo><mfrac><mn>1</mn><mn>3</mn></mfrac></mrow><annotation encoding="application/x-tex">\int_{0}^{1} x^2 dx = \frac{1}{3}</annotation></semantics></math></span>'
+    end
+
+    it "renders complex math expressions correctly" do
+      expect(subject).to include(expected_html)
+    end
+  end
+
+  context "with one line code input" do
+    subject {
+      described_class.to_html(
+      '`code`'
+    )}
+    let(:expected_html) do
+      "<p><code>code</code></p>\n"
+    end
+
+    it "renders code input correctly" do
+      expect(subject).to include(expected_html)
+    end
+  end
+  context "with multilines code input" do
+    subject {
+      described_class.to_html(
+      '```rs
+        fn main() {
+            println!("Hello Aquora!");
+        }
+    ```'
+    )}
+    let(:expected_html) do
+      "<p><code>rs\n        fn main() {\n            println!(\"Hello Aquora!\");\n        }\n   </code></p>\n"
+    end
+
+    it "renders code input correctly" do
+      expect(subject).to include(expected_html)
+    end
+  end
 end
