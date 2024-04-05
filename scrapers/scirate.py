@@ -43,7 +43,7 @@ def scrape_scirate():
 
                 description = f"{authors} ({date}). \n\n**Abstract:** {abstract} \n\nArxiv: https://arxiv.org/abs/{link.split('/')[-1]}"
 
-                if link and len(link) > 0 and not date.startswith("Jan") and int(date.split()[1]) >= 7:
+                if link and len(link) > 0:
                     paper_info = {
                         'link': f"https://scirate.com{link}",
                         'description': description,
