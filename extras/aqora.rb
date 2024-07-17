@@ -107,7 +107,7 @@ class Aqora
   cattr_reader :url, :web_hook_id
   cattr_accessor :secret
 
-  @url = 'https://app.aqora.io'
+  @url = 'https://aqora.io'
   @client_id = 'quantumnews'
   @secret = nil
   @api = nil
